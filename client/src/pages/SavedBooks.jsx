@@ -1,11 +1,11 @@
 // React setup
 import React from 'react';
-import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 // import the 'auth' setup
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 // need these to refactor for GraphQL API
-import { useQuery, useMutation } from '@apollo/client';
+// import { useQuery, useMutation } from '@apollo/client';
 import { REMOVE_BOOK } from '../utils/mutations';
 import { GET_ME } from '../utils/queries';
 
@@ -15,7 +15,7 @@ const SavedBooks = () => {
   
   const userData = data?.me || {};
 
-  // function to delete book from database
+  // function to delete book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -23,34 +23,30 @@ const SavedBooks = () => {
       return false;
     }
 
-    // new code
     try {
-    const response = await removeBook({ variables: { bookId } });
-        console.log('Deleted record: ', response);
-        if (error) {
-          console.log(error);
-        }
+      const response = await removeBook({ variables: { bookId } });
+      console.log('Deleted record: ', response);
+      if (error) {
+        console.log(error);
+      }
       // also remove from Localstorage
       removeBookId(bookId);
     } catch (err) {
       // display any caught errors here
-        console.error(err);
+      console.error(err);
     }
   };
 
   // if data isn't here yet, say so
-  // new code
   if (loading) {
     return <h2>LOADING...</h2>;
   }
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-dark'>
-        <Container>
-          <h1>Viewing saved books!</h1>
-        </Container>
-      </Jumbotron>
+      <Container>
+        <h1>Viewing saved books!</h1>
+      </Container>
       <Container>
         <h2>
           {userData.savedBooks.length
